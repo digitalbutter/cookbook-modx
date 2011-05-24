@@ -18,12 +18,22 @@
 # limitations under the License.
 #
 
-define :modx_site, :base_dir => '/var/www/', :name => nil, :db_name => nil, :db_host => nil do
+define :modx_site, :base_dir => '/var/www/', :name => nil, :src_dir => nil, :db_name => nil, :db_host => nil, :db_user => nil, :db_password => nil do
   modx_directory = params[:base_dir] + params[:name]
+
+  #Alphanumeric definition
+  alphanumerics = [('0'..'9'),('A'..'Z'),('a'..'z')].map {|range| range.to_a}.flatten
+
   template_variables = {
-      :site_dir => modx_directory,
+      :site_dir => params[:src_dir] || modx_directory,
       :db_name => params[:db_name],
-      :db_host => params[:db_host]
+      :db_host => params[:db_host],
+      :db_user => params[:db_user],
+      :db_password => params[:db_password],
+      :app_name => params[:name],
+      :sessionname => params[:name] + (0...13).map { alphanumerics[Kernel.rand(alphanumerics.size)] }.join,
+      :uuid => `uuidgen`.strip,
+      :current_time => Time.now.to_i
   }
 
   template "#{modx_directory}/config.core.php" do
