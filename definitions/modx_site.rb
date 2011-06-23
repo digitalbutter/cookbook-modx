@@ -26,6 +26,7 @@ define :modx_site, :base_dir => '/var/www/', :name => nil, :src_dir => nil, :db_
 
   template_variables = {
       :site_dir => params[:src_dir] || modx_directory,
+      :base_dir => modx_directory,
       :db_name => params[:db_name],
       :db_host => params[:db_host],
       :db_user => params[:db_user],
