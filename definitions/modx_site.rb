@@ -21,6 +21,8 @@
 define :modx_site, :base_dir => '/var/www/', :name => nil, :src_dir => nil, :db_name => nil, :db_host => nil, :db_user => nil, :db_password => nil do
   modx_directory = params[:src_dir] || params[:base_dir] + params[:name]
 
+  log "Install #{params[:name]} into #{modx_directory}'"
+
   #Alphanumeric definition
   alphanumerics = [('0'..'9'),('A'..'Z'),('a'..'z')].map {|range| range.to_a}.flatten
 
@@ -71,6 +73,10 @@ define :modx_site, :base_dir => '/var/www/', :name => nil, :src_dir => nil, :db_
     owner "root"
     group "root"
     variables template_variables
+  end
+
+  directory "#{modx_directory}/assets" do
+    mode "0777"
   end
 
   directory "#{modx_directory}/core/cache" do
