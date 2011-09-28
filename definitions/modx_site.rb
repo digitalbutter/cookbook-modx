@@ -77,6 +77,7 @@ define :modx_site, :base_dir => '/var/www/', :name => nil, :src_dir => nil, :db_
 
   directory "#{modx_directory}/assets" do
     mode "0777"
+    recursive true
   end
 
   directory "#{modx_directory}/core/cache" do
