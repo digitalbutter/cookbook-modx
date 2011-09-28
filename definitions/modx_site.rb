@@ -19,7 +19,9 @@
 #
 
 define :modx_site, :base_dir => '/var/www/', :name => nil, :src_dir => nil, :db_name => nil, :db_host => nil, :db_user => nil, :db_password => nil, :db_prefix => nil do
-  modx_directory = params[:base_dir] + params[:name]
+  modx_directory = params[:src_dir] || params[:base_dir] + params[:name]
+
+  log "Install #{params[:name]} into #{modx_directory}'"
 
   #Alphanumeric definition
   alphanumerics = [('0'..'9'),('A'..'Z'),('a'..'z')].map {|range| range.to_a}.flatten
@@ -40,6 +42,7 @@ define :modx_site, :base_dir => '/var/www/', :name => nil, :src_dir => nil, :db_
 
   template "#{modx_directory}/config.core.php" do
     source "config.core.php.erb"
+    cookbook "modx"
     mode "0644"
     owner "root"
     group "root"
@@ -47,6 +50,7 @@ define :modx_site, :base_dir => '/var/www/', :name => nil, :src_dir => nil, :db_
   end
 
   template "#{modx_directory}/manager/config.core.php" do
+    cookbook "modx"
     source "manager-config.core.php.erb"
     mode "0644"
     owner "root"
@@ -55,6 +59,7 @@ define :modx_site, :base_dir => '/var/www/', :name => nil, :src_dir => nil, :db_
   end
 
   template "#{modx_directory}/core/config/config.inc.php" do
+    cookbook "modx"
     source "core-config-config.inc.php.erb"
     mode "0644"
     owner "root"
@@ -62,12 +67,18 @@ define :modx_site, :base_dir => '/var/www/', :name => nil, :src_dir => nil, :db_
     variables template_variables
   end
 
-  template "#{modx_directory}/connectors/config.core.php." do
+  template "#{modx_directory}/connectors/config.core.php" do
+    cookbook "modx"
     source "connectors-config.core.php.erb"
     mode "0644"
     owner "root"
     group "root"
     variables template_variables
+  end
+
+  directory "#{modx_directory}/assets" do
+    mode "0777"
+    recursive true
   end
 
   directory "#{modx_directory}/core/cache" do
