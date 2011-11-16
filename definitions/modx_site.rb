@@ -76,12 +76,15 @@ define :modx_site, :base_dir => '/var/www/', :name => nil, :src_dir => nil, :db_
     variables template_variables
   end
 
-  directory "#{modx_directory}/assets" do
-    mode "0777"
-    recursive true
+  execute "chmod #{modx_directory}/assets" do
+      command "chmod 777 -R #{modx_directory}/assets"
   end
 
-  directory "#{modx_directory}/core/cache" do
-    mode "0777"
+  execute "rm #{modx_directory}/core/cache" do
+      command "rm -rf #{modx_directory}/core/cache/*"
+  end
+
+  execute "chmod #{modx_directory}/core/cache" do
+      command "chmod 777 #{modx_directory}/core/cache"
   end
 end
