@@ -44,8 +44,8 @@ define :modx_site, :base_dir => '/var/www/', :name => nil, :src_dir => nil, :db_
     source "config.core.php.erb"
     cookbook "modx"
     mode "0644"
-    owner "root"
-    group "root"
+    owner node[:modx][:site_owner]
+    group node[:modx][:site_group]
     variables template_variables
   end
 
@@ -53,8 +53,8 @@ define :modx_site, :base_dir => '/var/www/', :name => nil, :src_dir => nil, :db_
     cookbook "modx"
     source "manager-config.core.php.erb"
     mode "0644"
-    owner "root"
-    group "root"
+    owner node[:modx][:site_owner]
+    group node[:modx][:site_group]
     variables template_variables
   end
 
@@ -62,8 +62,8 @@ define :modx_site, :base_dir => '/var/www/', :name => nil, :src_dir => nil, :db_
     cookbook "modx"
     source "core-config-config.inc.php.erb"
     mode "0644"
-    owner "root"
-    group "root"
+    owner node[:modx][:site_owner]
+    group node[:modx][:site_group]
     variables template_variables
   end
 
@@ -71,20 +71,20 @@ define :modx_site, :base_dir => '/var/www/', :name => nil, :src_dir => nil, :db_
     cookbook "modx"
     source "connectors-config.core.php.erb"
     mode "0644"
-    owner "root"
-    group "root"
+    owner node[:modx][:site_owner]
+    group node[:modx][:site_group]
     variables template_variables
   end
 
-  execute "chmod #{modx_directory}/assets" do
-      command "chmod 777 -R #{modx_directory}/assets"
+  execute "chmod #{modx_directory}/assets/" do
+      command "chmod -R 777 #{modx_directory}/assets/"
   end
 
-  execute "rm #{modx_directory}/core/cache" do
+  execute "rm #{modx_directory}/core/cache/*" do
       command "rm -rf #{modx_directory}/core/cache/*"
   end
 
-  execute "chmod #{modx_directory}/core/cache" do
-      command "chmod 777 #{modx_directory}/core/cache"
+  execute "chmod #{modx_directory}/core/cache/" do
+      command "chmod 777 #{modx_directory}/core/cache/"
   end
 end
