@@ -35,7 +35,7 @@ define :modx_site_install, :base_dir => '/var/www/', :name => nil, :db_name => n
       :database_connection_charset => "utf8",
       :database_charset => "utf8",
       :table_prefix => "modx_",
-      :http_host => params[:name] + ".stg.tikiflow.com",
+      :http_host => params[:name] + ".servers.tikiflow.com",
       :language => "en",
       :database_collation => "utf8_general_ci",
       :cmsadmin => "admin",
