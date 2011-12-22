@@ -18,7 +18,7 @@
 # limitations under the License.
 #
 
-define :modx_site, :base_dir => '/var/www/', :name => nil, :src_dir => nil, :db_name => nil, :db_host => nil, :db_user => nil, :db_password => nil, :db_prefix => nil do
+define :modx_site, :base_dir => '/var/www/', :name => nil, :src_dir => nil, :db_name => nil, :db_host => nil, :db_user => nil, :db_password => nil, :db_prefix => nil, :site_owner => "root", :site_group => "root" do
   modx_directory = params[:src_dir] || params[:base_dir] + params[:name]
 
   log "Install #{params[:name]} into #{modx_directory}'"
@@ -44,8 +44,8 @@ define :modx_site, :base_dir => '/var/www/', :name => nil, :src_dir => nil, :db_
     source "config.core.php.erb"
     cookbook "modx"
     mode "0644"
-    owner node[:modx][:site_owner]
-    group node[:modx][:site_group]
+    owner params[:site_owner] 
+    group params[:site_group] 
     variables template_variables
   end
 
@@ -53,8 +53,8 @@ define :modx_site, :base_dir => '/var/www/', :name => nil, :src_dir => nil, :db_
     cookbook "modx"
     source "manager-config.core.php.erb"
     mode "0644"
-    owner node[:modx][:site_owner]
-    group node[:modx][:site_group]
+    owner params[:site_owner] 
+    group params[:site_group] 
     variables template_variables
   end
 
@@ -62,8 +62,8 @@ define :modx_site, :base_dir => '/var/www/', :name => nil, :src_dir => nil, :db_
     cookbook "modx"
     source "core-config-config.inc.php.erb"
     mode "0644"
-    owner node[:modx][:site_owner]
-    group node[:modx][:site_group]
+    owner params[:site_owner] 
+    group params[:site_group] 
     variables template_variables
   end
 
@@ -71,8 +71,8 @@ define :modx_site, :base_dir => '/var/www/', :name => nil, :src_dir => nil, :db_
     cookbook "modx"
     source "connectors-config.core.php.erb"
     mode "0644"
-    owner node[:modx][:site_owner]
-    group node[:modx][:site_group]
+    owner params[:site_owner] 
+    group params[:site_group] 
     variables template_variables
   end
 
