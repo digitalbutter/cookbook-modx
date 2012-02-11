@@ -40,36 +40,9 @@ define :modx_site, :base_dir => '/var/www/', :name => nil, :src_dir => nil, :db_
       :current_time => Time.now.to_i
   }
 
-  template "#{modx_directory}/config.core.php" do
-    source "config.core.php.erb"
-    cookbook "modx"
-    mode "0644"
-    owner params[:site_owner] 
-    group params[:site_group] 
-    variables template_variables
-  end
-
-  template "#{modx_directory}/manager/config.core.php" do
-    cookbook "modx"
-    source "manager-config.core.php.erb"
-    mode "0644"
-    owner params[:site_owner] 
-    group params[:site_group] 
-    variables template_variables
-  end
-
   template "#{modx_directory}/core/config/config.inc.php" do
     cookbook "modx"
     source "core-config-config.inc.php.erb"
-    mode "0644"
-    owner params[:site_owner] 
-    group params[:site_group] 
-    variables template_variables
-  end
-
-  template "#{modx_directory}/connectors/config.core.php" do
-    cookbook "modx"
-    source "connectors-config.core.php.erb"
     mode "0644"
     owner params[:site_owner] 
     group params[:site_group] 
