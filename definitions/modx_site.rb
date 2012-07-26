@@ -18,7 +18,7 @@
 # limitations under the License.
 #
 
-define :modx_site, :base_dir => '/var/www/', :name => nil, :src_dir => nil, :db_name => nil, :db_host => nil, :db_user => nil, :db_password => nil, :db_prefix => nil, :site_owner => "root", :site_group => "root", :base_url => "" do
+define :modx_site, :base_dir => '/var/www/', :name => nil, :src_dir => nil, :db_name => nil, :db_host => nil, :db_user => nil, :db_password => nil, :db_prefix => nil, :site_owner => "root", :site_group => "root", :base_url => "", :clear_cache => false do
   modx_directory = params[:src_dir] || params[:base_dir] + params[:name]
 
   log "Install #{params[:name]} into #{modx_directory}'"
@@ -54,8 +54,10 @@ define :modx_site, :base_dir => '/var/www/', :name => nil, :src_dir => nil, :db_
       command "chmod -R 777 #{modx_directory}/assets/"
   end
 
-  execute "rm #{modx_directory}/core/cache/*" do
-      command "rm -rf #{modx_directory}/core/cache/*"
+  if params[:clear_cache]
+    execute "rm #{modx_directory}/core/cache/*" do
+        command "rm -rf #{modx_directory}/core/cache/*"
+    end
   end
 
   execute "chmod #{modx_directory}/core/cache/" do
