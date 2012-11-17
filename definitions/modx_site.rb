@@ -43,21 +43,33 @@ define :modx_site, :base_dir => '/var/www/', :name => nil, :src_dir => nil, :db_
   template "#{modx_directory}/core/config/config.inc.php" do
     cookbook "modx"
     source "core-config-config.inc.php.erb"
-    mode "0644"
+    mode "0464"
     owner params[:site_owner] 
     group params[:site_group] 
     variables template_variables
   end
 
-  execute "chmod #{modx_directory}/assets/" do
-      command "chmod -R 777 #{modx_directory}/assets/"
+  execute "chown -R #{site_owner}:#{site_group} #{modx_base_path}/" do
+    command "chown -R #{site_owner}:#{site_group} #{modx_base_path}/"
+  end
+
+  execute "chmod -R 474 #{site_owner}:#{site_group} #{modx_base_path}/" do
+    command "chmod -R 474 #{site_owner}:#{site_group} #{modx_base_path}/"
+  end
+
+  writable_paths = [
+    'assets/components/phpthumbof/cache',
+    'assets/images',
+    'core/cache'
+  ]
+  
+  writable_paths.each do |writable_path| 
+    execute "chmod -R 774 #{modx_base_path}/#{writable_path}" do
+      command "chmod -R 774 #{modx_base_path}/#{writable_path}"
+    end
   end
 
   execute "rm #{modx_directory}/core/cache/*" do
       command "rm -rf #{modx_directory}/core/cache/*"
-  end
-
-  execute "chmod #{modx_directory}/core/cache/" do
-      command "chmod 777 #{modx_directory}/core/cache/"
   end
 end
