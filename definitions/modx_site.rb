@@ -18,7 +18,7 @@
 # limitations under the License.
 #
 
-define :modx_site, :base_dir => '/var/www/', :name => nil, :src_dir => nil, :db_name => nil, :db_host => nil, :db_user => nil, :db_password => nil, :db_prefix => nil, :site_owner => "root", :site_group => "root" do
+define :modx_site, :base_dir => '/var/www/', :base_url => '', :name => nil, :src_dir => nil, :db_name => nil, :db_host => nil, :db_user => nil, :db_password => nil, :db_prefix => nil, :site_owner => "root", :site_group => "root" do
   modx_directory = params[:src_dir] || params[:base_dir] + params[:name]
 
   log "Install #{params[:name]} into #{modx_directory}'"
@@ -29,6 +29,7 @@ define :modx_site, :base_dir => '/var/www/', :name => nil, :src_dir => nil, :db_
   template_variables = {
       :site_dir => params[:src_dir] || modx_directory,
       :base_dir => modx_directory,
+      :base_url => params[:base_url],
       :db_name => params[:db_name],
       :db_host => params[:db_host],
       :db_user => params[:db_user],
@@ -49,27 +50,22 @@ define :modx_site, :base_dir => '/var/www/', :name => nil, :src_dir => nil, :db_
     variables template_variables
   end
 
-  execute "chown -R #{site_owner}:#{site_group} #{modx_base_path}/" do
-    command "chown -R #{site_owner}:#{site_group} #{modx_base_path}/"
-  end
-
-  execute "chmod -R 474 #{site_owner}:#{site_group} #{modx_base_path}/" do
-    command "chmod -R 474 #{site_owner}:#{site_group} #{modx_base_path}/"
-  end
-
   writable_paths = [
     'assets/components/phpthumbof/cache',
     'assets/images',
     'core/cache'
   ]
-  
+
   writable_paths.each do |writable_path| 
-    execute "chmod -R 774 #{modx_base_path}/#{writable_path}" do
-      command "chmod -R 774 #{modx_base_path}/#{writable_path}"
+    execute "chmod -R 774 #{modx_directory}/#{writable_path}" do
+      command "chmod -R 774 #{modx_directory}/#{writable_path}"
+      only_if do
+        File.directory?("#{modx_directory}/#{writable_path}")
+      end
     end
   end
 
-  execute "rm #{modx_directory}/core/cache/*" do
-      command "rm -rf #{modx_directory}/core/cache/*"
-  end
+  # execute "rm #{modx_directory}/core/cache/*" do
+  #     command "rm -rf #{modx_directory}/core/cache/*"
+  # end
 end
