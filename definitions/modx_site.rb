@@ -18,7 +18,7 @@
 # limitations under the License.
 #
 
-define :modx_site, :base_dir => '/var/www/', :base_url => '', :name => nil, :src_dir => nil, :db_name => nil, :db_host => nil, :db_user => nil, :db_password => nil, :db_prefix => nil, :site_owner => "root", :site_group => "root" do
+define :modx_site, :base_dir => '/var/www/', :name => nil, :src_dir => nil, :db_name => nil, :db_host => nil, :db_user => nil, :db_password => nil, :db_prefix => nil, :site_owner => "root", :site_group => "root", :base_url => '', :clear_cache => false do
   modx_directory = params[:src_dir] || params[:base_dir] + params[:name]
 
   log "Install #{params[:name]} into #{modx_directory}'"
@@ -33,6 +33,7 @@ define :modx_site, :base_dir => '/var/www/', :base_url => '', :name => nil, :src
       :db_name => params[:db_name],
       :db_host => params[:db_host],
       :db_user => params[:db_user],
+      :base_url => params[:base_url],
       :db_prefix => params[:db_prefix] || 'modx_',
       :db_password => params[:db_password],
       :app_name => params[:name],
@@ -65,7 +66,9 @@ define :modx_site, :base_dir => '/var/www/', :base_url => '', :name => nil, :src
     end
   end
 
-  # execute "rm #{modx_directory}/core/cache/*" do
-  #     command "rm -rf #{modx_directory}/core/cache/*"
-  # end
+  if params[:clear_cache]
+    execute "rm #{modx_directory}/core/cache/*" do
+        command "rm -rf #{modx_directory}/core/cache/*"
+    end
+  end
 end
