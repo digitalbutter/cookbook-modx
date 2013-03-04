@@ -66,7 +66,7 @@ define :modx_site, :base_dir => '/var/www/', :name => nil, :src_dir => nil, :db_
     end
 
     variables = { 
-      "path" => "#{modx_directory}/{writable_path}"
+      "path" => "#{modx_directory}/#{writable_path}"
     }
 
     template "#{modx_directory}/#{writable_path}/.htaccess" do
