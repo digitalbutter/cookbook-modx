@@ -71,8 +71,8 @@ define :modx_site, :base_dir => '/var/www/', :name => nil, :src_dir => nil, :db_
 
     template "#{modx_directory}/#{writable_path}.htaccess" do
       source "blockFiles.erb"
-      owner app['owner']
-      group app['group']
+      owner params[:site_owner] 
+      group params[:site_group] 
       mode "574"
       variables variables 
       only_if do
