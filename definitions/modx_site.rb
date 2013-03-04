@@ -65,12 +65,16 @@ define :modx_site, :base_dir => '/var/www/', :name => nil, :src_dir => nil, :db_
       end
     end
 
+    variables { 
+      "path" => "#{modx_directory}/#{}{writable_path}"
+    }
+
     template "#{modx_directory}/#{writable_path}.htaccess" do
       source "blockFiles.erb"
       owner app['owner']
       group app['group']
       mode "574"
-      variables { "path" => "#{modx_directory}/#{}{writable_path}" } 
+      variables variables 
       only_if do
         File.directory?("#{modx_directory}/#{writable_path}")
       end
