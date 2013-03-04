@@ -65,7 +65,7 @@ define :modx_site, :base_dir => '/var/www/', :name => nil, :src_dir => nil, :db_
       end
     end
 
-    variables { 
+    variables = { 
       "path" => "#{modx_directory}/#{}{writable_path}"
     }
 
