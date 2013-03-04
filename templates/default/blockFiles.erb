@@ -1,0 +1,5 @@
+RewriteEngine On
+RewriteBase <%= @path %>
+
+php_flag engine off
+RewriteRule \.(php|html|phtml|htm|php3)$ - [NC,F,L]
