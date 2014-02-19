@@ -42,6 +42,13 @@ define :modx_site, :base_dir => '/var/www/', :name => nil, :src_dir => nil, :db_
       :current_time => Time.now.to_i
   }
 
+  directory "#{modx_directory}/core/config" do
+    mode 0574
+    owner params[:site_owner] 
+    group params[:site_group] 
+    action :create
+  end
+
   template "#{modx_directory}/core/config/config.inc.php" do
     cookbook "modx"
     source "core-config-config.inc.php.erb"
@@ -53,7 +60,11 @@ define :modx_site, :base_dir => '/var/www/', :name => nil, :src_dir => nil, :db_
 
   writable_paths = [
     'assets/components/phpthumbof/cache',
+    'assets/components/exportx/cache',
     'assets/images',
+    'assets/img',
+    'assets/pdf',
+    'assets/files',
     'core/cache'
   ]
 
