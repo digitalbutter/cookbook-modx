@@ -45,6 +45,7 @@ define :modx_site, :base_dir => '/var/www/', :name => nil, :src_dir => nil, :db_
     mode 0574
     owner params[:site_owner] 
     group params[:site_group] 
+    recursive true
     action :create
   end
 
