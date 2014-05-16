@@ -19,6 +19,7 @@
 #
 define :modx_site, :base_dir => '/var/www/', :name => nil, :src_dir => nil, :db_name => nil, :db_host => nil, :db_user => nil, :db_password => nil, :db_prefix => nil, :site_owner => "root", :site_group => "root", :base_url => '', :clear_cache => false do
   modx_directory = params[:src_dir] || params[:base_dir] + params[:name]
+  env = params[:env]
 
   log "Install #{params[:name]} into #{modx_directory}'"
 
@@ -41,12 +42,14 @@ define :modx_site, :base_dir => '/var/www/', :name => nil, :src_dir => nil, :db_
       :current_time => Time.now.to_i
   }
 
-  directory "#{modx_directory}/core/config" do
-    mode 0574
-    owner params[:site_owner] 
-    group params[:site_group] 
-    recursive true
-    action :create
+  if env == 'dev' && !File.directory?("#{modx_directory}/core/config")
+    directory "#{modx_directory}/core/config" do
+      mode 0574
+      owner params[:site_owner] 
+      group params[:site_group] 
+      recursive true
+      action :create
+    end
   end
 
   template "#{modx_directory}/core/config/config.inc.php" do
