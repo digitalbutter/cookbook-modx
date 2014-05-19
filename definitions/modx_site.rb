@@ -44,21 +44,19 @@ define :modx_site, :base_dir => '/var/www/', :name => nil, :src_dir => nil, :db_
 
   if env == 'dev' && !File.directory?("#{modx_directory}/core/config")
     directory "#{modx_directory}/core/config" do
-      mode 0574
-      owner params[:site_owner] 
-      group params[:site_group] 
+      mode 0774
       recursive true
       action :create
     end
   end
 
-  template "#{modx_directory}/core/config/config.inc.php" do
-    cookbook "modx"
-    source "core-config-config.inc.php.erb"
-    mode "0464"
-    owner params[:site_owner] 
-    group params[:site_group] 
-    variables template_variables
+  if env == 'dev' && !File.exist?("#{modx_directory}/core/config/config.inc.php")
+    template "#{modx_directory}/core/config/config.inc.php" do
+      cookbook "modx"
+      source "core-config-config.inc.php.erb"
+      mode "0664"
+      variables template_variables
+    end
   end
 
   writable_paths = [
@@ -83,14 +81,27 @@ define :modx_site, :base_dir => '/var/www/', :name => nil, :src_dir => nil, :db_
       "path" => "#{modx_directory}/#{writable_path}/"
     }
 
-    template "#{modx_directory}/#{writable_path}/.htaccess" do
-      source "blockFiles.erb"
-      owner params[:site_owner] 
-      group params[:site_group] 
-      mode "574"
-      variables variables 
-      only_if do
-        File.directory?("#{modx_directory}/#{writable_path}")
+    if env == 'dev'
+      if !File.exist?("#{modx_directory}/#{writable_path}/.htaccess")
+        template "#{modx_directory}/#{writable_path}/.htaccess" do
+          source "blockFiles.erb"
+          mode "774"
+          variables variables 
+          only_if do
+            File.directory?("#{modx_directory}/#{writable_path}")
+          end
+        end
+      end
+    else
+      template "#{modx_directory}/#{writable_path}/.htaccess" do
+        source "blockFiles.erb"
+        owner params[:site_owner] 
+        group params[:site_group] 
+        mode "574"
+        variables variables 
+        only_if do
+          File.directory?("#{modx_directory}/#{writable_path}")
+        end
       end
     end
   end
