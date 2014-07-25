@@ -69,6 +69,12 @@ define :modx_site, :base_dir => '/var/www/', :name => nil, :src_dir => nil, :db_
     'core/packages',
     'core/components'
   ]
+  static_paths = [
+    'assets/images',
+    'assets/img',
+    'assets/pdf',
+    'assets/files'
+  ]
 
   writable_paths.each do |writable_path| 
     execute "chmod -R 774 #{modx_directory}/#{writable_path}" do
@@ -77,19 +83,21 @@ define :modx_site, :base_dir => '/var/www/', :name => nil, :src_dir => nil, :db_
         File.directory?("#{modx_directory}/#{writable_path}")
       end
     end
+  end
 
+  static_paths.each do |static_path|
     variables = { 
-      "path" => "#{modx_directory}/#{writable_path}/"
+      "path" => "#{modx_directory}/#{static_path}/"
     }
 
-    template "#{modx_directory}/#{writable_path}/.htaccess" do
+    template "#{modx_directory}/#{static_path}/.htaccess" do
       source "blockFiles.erb"
       owner params[:site_owner] 
       group params[:site_group] 
       mode "574"
       variables variables 
       only_if do
-        File.directory?("#{modx_directory}/#{writable_path}")
+        File.directory?("#{modx_directory}/#{static_path}")
       end
     end
   end
