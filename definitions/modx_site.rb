@@ -60,13 +60,14 @@ define :modx_site, :base_dir => '/var/www/', :name => nil, :src_dir => nil, :db_
   end
 
   writable_paths = [
-    'assets/components/phpthumbof/cache',
-    'assets/components/exportx/cache',
+    'assets/components',
     'assets/images',
     'assets/img',
     'assets/pdf',
     'assets/files',
-    'core/cache'
+    'core/cache',
+    'core/packages',
+    'core/components'
   ]
 
   writable_paths.each do |writable_path| 
